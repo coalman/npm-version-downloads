@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { type ModuleStats as ModuleStatsData } from "pages/api/module/[module]/stats";
 
-export function useModuleQuery(moduleName: string) {
+export function useModuleQuery(moduleName: string | undefined) {
   const [queryState, setQueryState] = useState<
     | { state: "pending" }
     | { state: "completed"; data: ModuleStatsData }
@@ -10,6 +10,8 @@ export function useModuleQuery(moduleName: string) {
 
   useEffect(() => {
     setQueryState({ state: "pending" });
+
+    if (moduleName === undefined) return;
 
     const abortController = new AbortController();
     fetchModuleStats(moduleName, abortController.signal).then(

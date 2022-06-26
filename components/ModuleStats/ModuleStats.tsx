@@ -26,7 +26,7 @@ const chartTheme = buildChartTheme({
 });
 
 const ModuleStats: FC<{
-  moduleName: string;
+  moduleName: string | undefined;
   versionsDownloads: Record<string, number>;
 }> = (props) => {
   const chartData = useMemo(
@@ -98,11 +98,13 @@ const ModuleStats: FC<{
           }
         />
       </XYChart>
-      <VersionTable
-        // if there is no selected data, just show the top level major version data
-        data={selectedDatumBreakdown ?? chartData}
-        selectionName={selectedDatum?.versionRange ?? props.moduleName}
-      />
+      {props.moduleName && (
+        <VersionTable
+          // if there is no selected data, just show the top level major version data
+          data={selectedDatumBreakdown ?? chartData}
+          selectionName={selectedDatum?.versionRange ?? props.moduleName}
+        />
+      )}
     </Fragment>
   );
 };

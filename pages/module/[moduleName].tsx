@@ -8,12 +8,12 @@ import ModuleStats from "components/ModuleStats/ModuleStats";
 import LoadingSpinner from "components/LoadingSpinner/LoadingSpinner";
 
 const ModuleStatsPage: NextPage = () => {
-  const moduleName = useRouter().query.moduleName as string;
+  const moduleName = useRouter().query.moduleName as string | undefined;
 
   const moduleQuery = useModuleQuery(moduleName);
 
   // "/" is replaced with "$$" for the rest api call
-  const moduleDisplayName = moduleName.replace("$$", "/");
+  const moduleDisplayName = moduleName?.replace("$$", "/");
 
   return (
     <Fragment>

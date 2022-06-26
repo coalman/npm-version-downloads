@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import { type FC, type ReactElement } from "react";
 import Logo from "../Logo/Logo";
 import styles from "./Layout.module.css";
 import { ModuleSearch } from "../ModuleSearch/ModuleSearch";
@@ -6,6 +6,7 @@ import { ModuleSearch } from "../ModuleSearch/ModuleSearch";
 const Layout: FC<{
   hideLogo?: boolean;
   hideModuleSearch?: boolean;
+  children?: ReactElement;
 }> = (props) => {
   return (
     <div className={styles.layout}>
