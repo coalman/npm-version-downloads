@@ -1,0 +1,22 @@
+.layout {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.header,
+.footer {
+  color: var(--invert-color);
+  background-color: var(--invert-bg-color);
+}
+
+.header {
+  padding: 1rem 3rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.footer {
+  min-height: 3rem;
+}

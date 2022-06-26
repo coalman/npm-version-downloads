@@ -1,0 +1,45 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ^ above code was auto generated ^ */
+
+html {
+  --color: black;
+  --bg-color: white;
+  --invert-color: white;
+  --invert-bg-color: black;
+
+  --alt-row-bg-color: lightgray;
+  --bar-bg: steelblue;
+}
+
+body {
+  background-color: var(--bg-color);
+}
+
+/* TODO: can probably improve this */
+/* screen reader only content (should be offscreened) */
+.sr-only {
+  position: absolute;
+  height: 1px;
+  width: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+}

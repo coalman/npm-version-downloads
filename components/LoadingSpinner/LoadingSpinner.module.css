@@ -1,0 +1,52 @@
+/* modified from https://loading.io/css/ */
+.loadingSpinner {
+  display: inline-block;
+  box-sizing: border-box;
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 6px solid;
+  border-color: var(--color) transparent;
+}
+
+.loadingSpinner {
+  animation: loading-spin 1.2s linear infinite;
+}
+
+/* screen reader only when motion is preferred (clip approach) */
+.loadingText {
+  position: absolute;
+  height: 1px;
+  width: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+}
+
+/* When the user prefers reduced motion:
+ * - hide the loading spinner
+ * - show the loading text
+ */
+@media (prefers-reduced-motion) {
+  .loadingSpinner {
+    display: none;
+    animation: none;
+  }
+
+  .loadingText {
+    all: inherit;
+  }
+}
+
+@keyframes loading-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

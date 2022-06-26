@@ -1,0 +1,11 @@
+.moduleTitle {
+  margin: 0;
+}
+
+.main {
+  padding: 4rem 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}

@@ -1,0 +1,14 @@
+.container {
+  display: flex;
+  gap: 6px;
+}
+
+.input {
+  text-align: center;
+}
+
+.searchButton {
+  color: var(--color);
+  background-color: var(--bg-color);
+  border: 1px solid var(--color);
+}

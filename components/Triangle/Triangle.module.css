@@ -1,0 +1,17 @@
+.triangle {
+  --height: 6px;
+  width: 0;
+  height: 0;
+  display: inline-block;
+  border: calc(var(--height) / 2) solid transparent;
+}
+
+.triangle[data-dir="up"] {
+  border-top: 0;
+  border-bottom: var(--height) solid var(--color);
+}
+
+.triangle[data-dir="down"] {
+  border-bottom: 0;
+  border-top: var(--height) solid var(--color);
+}
