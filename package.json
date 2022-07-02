@@ -1,6 +1,11 @@
 {
   "name": "npm-version-downloads",
   "private": true,
+  "license": "AGPL-3.0-only",
+  "author": {
+    "name": "Michael K Coleman",
+    "email": "tehcoalman+github@gmail.com"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
