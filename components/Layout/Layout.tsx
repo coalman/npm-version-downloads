@@ -32,7 +32,7 @@ const Header: FC<{
     <section>
       <a href="https://github.com/coalman/npm-version-downloads">
         <svg width="24" height="24" viewBox="0 0 24 24">
-          <use href="github.svg#icon" />
+          <use href="/github.svg#icon" />
         </svg>
       </a>
     </section>
