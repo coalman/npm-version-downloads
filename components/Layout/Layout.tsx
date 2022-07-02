@@ -30,7 +30,10 @@ const Header: FC<{
     <section>{!props.hideLogo && <Logo link />}</section>
     {!props.hideModuleSearch && <ModuleSearch />}
     <section>
-      <a href="https://github.com/coalman/npm-version-downloads">
+      <a
+        href="https://github.com/coalman/npm-version-downloads"
+        aria-label="Github repository link."
+      >
         <svg width="24" height="24" viewBox="0 0 24 24">
           <use href="/github.svg#icon" />
         </svg>
