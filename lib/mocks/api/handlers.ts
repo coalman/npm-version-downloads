@@ -70,4 +70,12 @@ const moduleData: Record<string, ModuleData | undefined> =
       },
       deprecations: [],
     },
+    loose: {
+      // NOTE: grunt has old version numbers like this. These require loose semver parsing.
+      versionsDownloads: {
+        "0.4.0a": 50,
+        "0.4.0rc2": 100,
+      },
+      deprecations: [],
+    },
   });

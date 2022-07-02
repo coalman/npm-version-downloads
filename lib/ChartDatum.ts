@@ -1,4 +1,5 @@
 import { compare as compareSemver } from "semver";
+import semverParse from "semver/functions/parse";
 import { type Compare, compareKey, compareNumber } from "./sort";
 
 export interface ChartDatum {
@@ -7,10 +8,13 @@ export interface ChartDatum {
   readonly downloads: number;
 }
 
-export const compareVersion: Compare<ChartDatum> = compareKey(
-  (i) => i.version,
-  compareSemver
-);
+export const compareVersion: Compare<ChartDatum> = compareKey((i) => {
+  const version = semverParse(i.version, { loose: true })?.version;
+  if (version === undefined) {
+    throw new Error(`Wasn't able to parse "${i.version}" semver string.`);
+  }
+  return version;
+}, compareSemver);
 export const compareDownloads: Compare<ChartDatum> = compareKey(
   (i) => i.downloads,
   compareNumber

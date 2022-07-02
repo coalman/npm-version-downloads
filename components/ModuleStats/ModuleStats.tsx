@@ -1,5 +1,5 @@
 import { type FC, Fragment, useMemo, useState } from "react";
-import { major as semverMajor } from "semver";
+import semverParse from "semver/functions/parse";
 import {
   XYChart,
   BarSeries,
@@ -119,6 +119,14 @@ const ChartTooltip: FC<{ datum: ChartDatum }> = (props) => (
     <p>Downloads: {numberFormatter.format(accessors.yAccessor(props.datum))}</p>
   </Fragment>
 );
+
+function semverMajor(version: string): number {
+  const majorVersion = semverParse(version, { loose: true })?.major;
+  if (majorVersion === undefined) {
+    throw new Error(`Wasn't able to parse "${version}" semver string.`);
+  }
+  return majorVersion;
+}
 
 const majorVersionRange = (majorVersion: number): string => `${majorVersion}.X`;
 
