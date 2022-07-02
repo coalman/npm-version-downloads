@@ -9,7 +9,7 @@ import fetch, { Headers, Request, Response } from "node-fetch";
 
 if (!globalThis.fetch) {
   globalThis.fetch = async (input, ...args) => {
-    return fetch(new URL(input, "http://localhost:8080/"), ...args);
+    return fetch(new URL(input, "http://localhost:3000/"), ...args);
   };
   globalThis.Headers = Headers;
   globalThis.Request = Request;
