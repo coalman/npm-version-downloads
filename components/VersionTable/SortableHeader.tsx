@@ -17,7 +17,7 @@ export const SortableHeader = (props: {
         onClick={props.onClick}
       >
         {props.children}
-        {props.sort === "none" ? null : (
+        {props.sort === "none" || props.sort === undefined ? null : (
           <Triangle dir={props.sort === "ascending" ? "up" : "down"} />
         )}
       </button>
