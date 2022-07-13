@@ -6,6 +6,7 @@ import "@testing-library/jest-dom/extend-expect";
 
 // fetch polyfill
 import fetch, { Headers, Request, Response } from "node-fetch";
+import { TextDecoder, TextEncoder } from "node:util";
 
 if (!globalThis.fetch) {
   globalThis.fetch = async (input, ...args) => {
@@ -14,4 +15,6 @@ if (!globalThis.fetch) {
   globalThis.Headers = Headers;
   globalThis.Request = Request;
   globalThis.Response = Response;
+  globalThis.TextEncoder = TextEncoder;
+  globalThis.TextDecoder = TextDecoder;
 }
