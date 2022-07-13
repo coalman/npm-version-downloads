@@ -17,6 +17,7 @@ export const handlers = [
     }
 
     return res(
+      ctx.delay(),
       ctx.status(200),
       ctx.json({
         ...data,

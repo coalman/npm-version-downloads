@@ -7,6 +7,13 @@ const preNextConfig = {
     "<rootDir>/lib/mocks/jestSetup.ts",
   ],
   testEnvironment: "jest-environment-jsdom",
+  collectCoverageFrom: [
+    ...["components", "lib", "pages"].map((dir) => `${dir}/**/*.{ts,tsx}`),
+    // these files are meant for usage in a browser to set up msw.
+    "!lib/mocks/api/{browser,index}.ts",
+  ],
+  coverageProvider: "v8",
+  //coverageReporters: ["html", "text-summary"],
 };
 
 const nextJest = require("next/jest");
