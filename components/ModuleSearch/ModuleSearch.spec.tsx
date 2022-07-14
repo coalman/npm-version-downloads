@@ -1,6 +1,6 @@
 import userEvent from "@testing-library/user-event";
 import { render, screen } from "@testing-library/react";
-import { ModuleSearch } from "./ModuleSearch";
+import { ModuleSearch } from ".";
 
 let useRouterSpy: jest.SpyInstance;
 beforeEach(() => {

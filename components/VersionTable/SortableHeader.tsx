@@ -1,6 +1,5 @@
 import { type AriaAttributes } from "react";
-import styles from "./VersionTable.module.css";
-import Triangle from "../Triangle/Triangle";
+import Triangle from "../Triangle";
 
 export type HeaderSort = AriaAttributes["aria-sort"];
 
@@ -10,10 +9,10 @@ export const SortableHeader = (props: {
   children?: string;
 }) => {
   return (
-    <th aria-sort={props.sort}>
+    <th aria-sort={props.sort} className="p-0">
       <button
         type="button"
-        className={styles.headerButton}
+        className="w-48 min-w-full px-2 flex gap-2 items-center box-border border border-solid border-transparent hover:border-black"
         onClick={props.onClick}
       >
         {props.children}

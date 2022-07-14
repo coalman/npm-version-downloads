@@ -1,4 +1,3 @@
-import cx from "clsx";
 import { type FC, useMemo, useState } from "react";
 import {
   type ChartDatum,
@@ -11,7 +10,6 @@ import {
   toggleSortedHeader,
   type SortedHeader,
 } from "./SortableHeader";
-import styles from "./VersionTable.module.css";
 
 const numberFormatter = new Intl.NumberFormat();
 
@@ -48,7 +46,7 @@ export const VersionTable: FC<VersionTableProps> = (props) => {
   });
 
   return (
-    <table className={styles.table}>
+    <table className="table-fixed border-collapse">
       <caption>
         Weekly downloads for {props.selectionName}
         <span className="sr-only">
@@ -67,11 +65,11 @@ export const VersionTable: FC<VersionTableProps> = (props) => {
       </thead>
       <tbody>
         {sortedData.map(({ version, downloads }) => (
-          <tr key={version} className={styles.row}>
-            <td className={styles.cell} data-testid="version-cell">
+          <tr key={version} className="odd:bg-slate-300">
+            <td className="px-2 py-1" data-testid="version-cell">
               {version}
             </td>
-            <td className={cx(styles.cell, styles.cellDownloads)}>
+            <td className="px-2 py-1 text-right">
               <code>{numberFormatter.format(downloads)}</code>
             </td>
           </tr>

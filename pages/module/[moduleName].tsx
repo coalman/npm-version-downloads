@@ -3,9 +3,8 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { Fragment } from "react";
 import { useModuleQuery } from "lib/useModuleQuery";
-import styles from "components/ModuleStats/ModuleStats.module.css";
-import ModuleStats from "components/ModuleStats/ModuleStats";
-import LoadingSpinner from "components/LoadingSpinner/LoadingSpinner";
+import { ModuleStats } from "components/ModuleStats";
+import LoadingSpinner from "components/LoadingSpinner";
 
 const ModuleStatsPage: NextPage = () => {
   const moduleName = useRouter().query.moduleName as string | undefined;
@@ -25,7 +24,7 @@ const ModuleStatsPage: NextPage = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
+      <main className="px-16 py-12 flex flex-col items-center gap-8">
         {moduleQuery.state !== "completed" ? null : (
           <ModuleStats
             moduleName={moduleDisplayName}
