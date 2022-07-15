@@ -9,20 +9,21 @@ import {
 } from "@visx/xychart";
 import { reverseCompare } from "lib/sort";
 import { compareVersion, type ChartDatum } from "lib/ChartDatum";
-import { VersionTable } from "../VersionTable/VersionTable";
-import styles from "./ModuleStats.module.css";
+import { VersionTable } from "../VersionTable";
 
 const accessors = {
   xAccessor: (d: ChartDatum) => d.versionRange,
   yAccessor: (d: ChartDatum) => d.downloads,
 } as const;
 
+// TODO: get these values from the same place tailwindcss does
+//     | (might need to add some css variables to do this).
 const chartTheme = buildChartTheme({
-  backgroundColor: "var(--bg-color)",
-  colors: ["var(--bar-bg)"],
+  backgroundColor: "white",
+  colors: ["steelblue"],
   tickLength: 5,
-  gridColor: "var(--color)",
-  gridColorDark: "var(--color)",
+  gridColor: "black",
+  gridColorDark: "black",
 });
 
 const ModuleStats: FC<{
@@ -57,7 +58,7 @@ const ModuleStats: FC<{
 
   return (
     <Fragment>
-      <h1 className={styles.moduleTitle}>
+      <h1 className="font-bold text-2xl">
         <a
           href="#"
           onClick={(event) => {

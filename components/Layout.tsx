@@ -1,7 +1,6 @@
 import { type FC, type ReactElement } from "react";
-import Logo from "../Logo/Logo";
-import styles from "./Layout.module.css";
-import { ModuleSearch } from "../ModuleSearch/ModuleSearch";
+import Logo from "./Logo";
+import { ModuleSearch } from "./ModuleSearch";
 
 const Layout: FC<{
   hideLogo?: boolean;
@@ -9,7 +8,7 @@ const Layout: FC<{
   children?: ReactElement;
 }> = (props) => {
   return (
-    <div className={styles.layout}>
+    <div className="grid grid-rows-[auto_1fr_auto] min-h-screen">
       <Header
         hideLogo={props.hideLogo}
         hideModuleSearch={props.hideModuleSearch}
@@ -26,7 +25,7 @@ const Header: FC<{
   hideLogo: boolean | undefined;
   hideModuleSearch: boolean | undefined;
 }> = (props) => (
-  <header className={styles.header}>
+  <header className="px-12 py-4 flex justify-between text-white bg-black">
     <section>{!props.hideLogo && <Logo link />}</section>
     {!props.hideModuleSearch && <ModuleSearch />}
     <section>
@@ -42,4 +41,4 @@ const Header: FC<{
   </header>
 );
 
-const Footer: FC = () => <footer className={styles.footer}></footer>;
+const Footer: FC = () => <footer className="h-12 text-white bg-black"></footer>;
