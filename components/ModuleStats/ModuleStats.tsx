@@ -1,30 +1,14 @@
 import { type FC, Fragment, useMemo, useState } from "react";
 import semverParse from "semver/functions/parse";
-import {
-  XYChart,
-  BarSeries,
-  Axis,
-  Tooltip,
-  buildChartTheme,
-} from "@visx/xychart";
 import { reverseCompare } from "lib/sort";
 import { compareVersion, type ChartDatum } from "lib/ChartDatum";
 import { VersionTable } from "../VersionTable";
+import VersionDownloadsBarChart from "./VersionDownloadsBarChart";
 
 const accessors = {
   xAccessor: (d: ChartDatum) => d.versionRange,
   yAccessor: (d: ChartDatum) => d.downloads,
 } as const;
-
-// TODO: get these values from the same place tailwindcss does
-//     | (might need to add some css variables to do this).
-const chartTheme = buildChartTheme({
-  backgroundColor: "white",
-  colors: ["steelblue"],
-  tickLength: 5,
-  gridColor: "black",
-  gridColorDark: "black",
-});
 
 const ModuleStats: FC<{
   moduleName: string | undefined;
@@ -69,36 +53,16 @@ const ModuleStats: FC<{
           {props.moduleName}
         </a>
       </h1>
-      <XYChart
-        width={600}
-        height={400}
-        theme={chartTheme}
-        xScale={{ type: "band", padding: 0.1 }}
-        yScale={{ type: "linear", domain: yAxis.domain }}
-        captureEvents
-        onPointerUp={({ datum }) => setSelectedDatum(datum as ChartDatum)}
-      >
-        <Axis
-          orientation="left"
-          label="Downloads"
-          numTicks={yAxis.ticks.length}
-          tickValues={yAxis.ticks}
-          tickFormat={yAxis.tickFormat}
+      <div style={{ width: 600, height: 400 }}>
+        <VersionDownloadsBarChart
+          data={chartData}
+          {...accessors}
+          yDomain={yAxis.domain}
+          yTicks={yAxis.ticks}
+          yTickFormat={yAxis.tickFormat}
+          onPointerUp={setSelectedDatum}
         />
-        <Axis orientation="bottom" label="Version Range" />
-        <BarSeries data={chartData} dataKey="Bar1" {...accessors} />
-        <Tooltip
-          snapTooltipToDatumX
-          showSeriesGlyphs
-          renderTooltip={({ tooltipData }) =>
-            tooltipData?.nearestDatum !== undefined ? (
-              <ChartTooltip
-                datum={tooltipData.nearestDatum.datum as ChartDatum}
-              />
-            ) : null
-          }
-        />
-      </XYChart>
+      </div>
       {props.moduleName && (
         <VersionTable
           // if there is no selected data, just show the top level major version data
@@ -111,15 +75,6 @@ const ModuleStats: FC<{
 };
 
 export default ModuleStats;
-
-const numberFormatter = new Intl.NumberFormat();
-
-const ChartTooltip: FC<{ datum: ChartDatum }> = (props) => (
-  <Fragment>
-    <p>Version: {accessors.xAccessor(props.datum)}</p>
-    <p>Downloads: {numberFormatter.format(accessors.yAccessor(props.datum))}</p>
-  </Fragment>
-);
 
 function semverMajor(version: string): number {
   const majorVersion = semverParse(version, { loose: true })?.major;
@@ -190,7 +145,7 @@ export function computeYAxis(largestValue: number) {
     .fill(null) // map skips holes in array, so we need to fill them
     .map((_, i) => i * step);
 
-  const domain = [ticks[0], ticks[ticks.length - 1]];
+  const domain: [number, number] = [ticks[0], ticks[ticks.length - 1]];
 
   let tickFormat = (value: number) => {
     if (value === 0) return "0";
