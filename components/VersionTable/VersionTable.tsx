@@ -1,22 +1,25 @@
 import { type FC, useMemo, useState } from "react";
-import {
-  type ChartDatum,
-  compareVersion,
-  compareDownloads,
-} from "lib/ChartDatum";
-import { reverseCompare } from "lib/sort";
+import { compareNumber, FieldComparatorMap, reverseCompare } from "lib/sort";
 import {
   SortableHeader,
   toggleSortedHeader,
   type SortedHeader,
 } from "./SortableHeader";
-
-const numberFormatter = new Intl.NumberFormat();
+import { compareLooseSemver } from "components/ModuleStats/ChartData";
 
 export interface VersionTableDatum {
   version: string;
   downloads: number;
 }
+
+const fieldComparators = new FieldComparatorMap<VersionTableDatum>({
+  version: compareLooseSemver,
+  downloads: compareNumber,
+});
+
+type VersionTableHeader = SortedHeader<keyof VersionTableDatum>;
+
+const numberFormatter = new Intl.NumberFormat();
 
 export interface VersionTableProps {
   /**
@@ -25,7 +28,7 @@ export interface VersionTableProps {
    * This should be things like "react" or "16.X" depending on what is selected.
    */
   selectionName: string;
-  data: readonly ChartDatum[];
+  data: readonly VersionTableDatum[];
 }
 
 export const VersionTable: FC<VersionTableProps> = (props) => {
@@ -34,10 +37,13 @@ export const VersionTable: FC<VersionTableProps> = (props) => {
     sort: "descending",
   });
 
-  const sortedData = useMemo(
-    () => sortChartDatumByHeader(sortedHeader, props.data),
-    [sortedHeader, props.data]
-  );
+  const sortedData = useMemo(() => {
+    let compare = fieldComparators.get(sortedHeader.field);
+    if (sortedHeader.sort === "descending") {
+      compare = reverseCompare(compare);
+    }
+    return Array.from(props.data).sort(compare);
+  }, [sortedHeader, props.data]);
 
   const getHeaderProps = (field: VersionTableHeader["field"]) => ({
     field,
@@ -78,21 +84,3 @@ export const VersionTable: FC<VersionTableProps> = (props) => {
     </table>
   );
 };
-
-const fieldComparisons = {
-  version: compareVersion,
-  downloads: compareDownloads,
-} as const;
-
-type VersionTableHeader = SortedHeader<keyof typeof fieldComparisons>;
-
-function sortChartDatumByHeader(
-  state: VersionTableHeader,
-  data: readonly ChartDatum[]
-): ChartDatum[] {
-  let compare = fieldComparisons[state.field];
-  if (state.sort === "descending") {
-    compare = reverseCompare(compare);
-  }
-  return Array.from(data).sort(compare);
-}

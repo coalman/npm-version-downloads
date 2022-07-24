@@ -1,12 +1,11 @@
 import userEvent from "@testing-library/user-event";
 import { render, screen } from "@testing-library/react";
 import { VersionTable } from "./VersionTable";
-import { type ChartDatum } from "lib/ChartDatum";
 
-const defaultData: readonly ChartDatum[] = [
-  { version: "1.0.0", versionRange: "1.X", downloads: 300 },
-  { version: "2.0.0", versionRange: "2.X", downloads: 200 },
-  { version: "3.0.0", versionRange: "3.X", downloads: 100 },
+const defaultData = [
+  { version: "1.0.0", downloads: 300 },
+  { version: "2.0.0", downloads: 200 },
+  { version: "3.0.0", downloads: 100 },
 ];
 
 function getVersionCells() {

@@ -1,8 +1,5 @@
-import {
-  filterByMajorVersion,
-  groupByMajorVersion,
-  computeYAxis,
-} from "./ModuleStats";
+import { filterByMajorVersion, groupByMajorVersion } from "./ModuleStats";
+import { computeYAxis } from "./VersionDownloadsBarChart";
 
 describe("filterByMajorVersion", () => {
   it("should select data for 1.X", () => {
