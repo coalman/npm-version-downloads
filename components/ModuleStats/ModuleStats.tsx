@@ -1,14 +1,18 @@
 import { type FC, Fragment, useMemo, useState } from "react";
 import semverParse from "semver/functions/parse";
-import { reverseCompare } from "lib/sort";
-import { compareVersion, type ChartDatum } from "lib/ChartDatum";
+import { reverseCompare, compareField } from "lib/sort";
+import { compareLooseSemver } from "./ChartData";
 import { VersionTable } from "../VersionTable";
 import VersionDownloadsBarChart from "./VersionDownloadsBarChart";
 
-const accessors = {
-  xAccessor: (d: ChartDatum) => d.versionRange,
-  yAccessor: (d: ChartDatum) => d.downloads,
-} as const;
+export interface ChartDatum {
+  readonly versionRange: string;
+  readonly version: string;
+  readonly downloads: number;
+}
+
+const xAccessor = (d: ChartDatum) => d.versionRange;
+const yAccessor = (d: ChartDatum) => d.downloads;
 
 const ModuleStats: FC<{
   moduleName: string | undefined;
@@ -32,19 +36,11 @@ const ModuleStats: FC<{
     }
   }, [selectedDatum, props.versionsDownloads]);
 
-  const yAxis = useMemo(() => {
-    const largestDownloadCount = chartData.reduce(
-      (max, { downloads }) => Math.max(max, downloads),
-      0
-    );
-    return computeYAxis(largestDownloadCount);
-  }, [chartData]);
-
   return (
     <Fragment>
       <h1 className="font-bold text-2xl">
         <a
-          href="#"
+          href="javascript:void(0);"
           onClick={(event) => {
             setSelectedDatum(undefined);
             event.preventDefault();
@@ -56,10 +52,8 @@ const ModuleStats: FC<{
       <div style={{ width: 600, height: 400 }}>
         <VersionDownloadsBarChart
           data={chartData}
-          {...accessors}
-          yDomain={yAxis.domain}
-          yTicks={yAxis.ticks}
-          yTickFormat={yAxis.tickFormat}
+          xAccessor={xAccessor}
+          yAccessor={yAccessor}
           onPointerUp={setSelectedDatum}
         />
       </div>
@@ -122,43 +116,6 @@ export function groupByMajorVersion(
         downloads,
       }))
       // the data needs to be sorted for the XYChart component to render it in the correct order
-      .sort(reverseCompare(compareVersion))
+      .sort(reverseCompare(compareField("version", compareLooseSemver)))
   );
-}
-
-export function computeYAxis(largestValue: number) {
-  // NOTE: largestValue and step have a minimum value of 1 so that
-  // in empty/small cases, we still render a tick at 0 and 1.
-  largestValue = Math.max(largestValue, 1);
-
-  // Calculate the largest power of 10 that will span the domain in
-  // less than or equal to 10 steps (11 ticks if you count tick at 0).
-  //
-  // calculate a 1/10th step from 0 to the largestValue (not a power of 10)
-  let step = Math.max(1, largestValue / 10);
-  // find the closest power of 10 greater than step
-  const stepPower = Math.ceil(Math.log10(step));
-  step = 10 ** stepPower;
-
-  // +1 tick to account for the first tick starting at 0
-  const ticks = Array(1 + Math.ceil(largestValue / step))
-    .fill(null) // map skips holes in array, so we need to fill them
-    .map((_, i) => i * step);
-
-  const domain: [number, number] = [ticks[0], ticks[ticks.length - 1]];
-
-  let tickFormat = (value: number) => {
-    if (value === 0) return "0";
-    return `${value / step}e${stepPower}`;
-  };
-  // only use scientific notation if steps are larger than 100
-  if (stepPower <= 2) {
-    tickFormat = String;
-  }
-
-  return {
-    ticks,
-    domain,
-    tickFormat,
-  };
 }
