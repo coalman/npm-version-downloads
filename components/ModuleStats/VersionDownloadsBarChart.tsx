@@ -70,7 +70,7 @@ function VersionDownloadsBarChart<T extends object>(
             snapTooltipToDatumX
             showSeriesGlyphs
             renderTooltip={({ tooltipData }) => {
-              const datum = tooltipData?.nearestDatum as T | undefined;
+              const datum = tooltipData?.nearestDatum?.datum as T | undefined;
               if (!datum) return null;
               return (
                 <ChartTooltip
