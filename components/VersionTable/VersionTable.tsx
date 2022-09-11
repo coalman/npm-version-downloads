@@ -5,7 +5,7 @@ import {
   toggleSortedHeader,
   type SortedHeader,
 } from "./SortableHeader";
-import { compareLooseSemver } from "components/ModuleStats/ChartData";
+import { compareLooseSemver } from "lib/semver";
 
 export interface VersionTableDatum {
   version: string;

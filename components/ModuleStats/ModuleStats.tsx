@@ -1,7 +1,7 @@
 import { type FC, Fragment, useMemo, useState } from "react";
 import semverParse from "semver/functions/parse";
 import { reverseCompare, compareField } from "lib/sort";
-import { compareLooseSemver } from "./ChartData";
+import { compareLooseSemver } from "lib/semver";
 import { VersionTable } from "../VersionTable";
 import VersionDownloadsBarChart from "./VersionDownloadsBarChart";
 
@@ -18,23 +18,27 @@ const ModuleStats: FC<{
   moduleName: string | undefined;
   versionsDownloads: Record<string, number>;
 }> = (props) => {
-  const chartData = useMemo(
+  const [selectedDatum, setSelectedDatum] = useState<ChartDatum | undefined>();
+
+  const majorVersionGroups = useMemo(
     () => groupByMajorVersion(props.versionsDownloads),
     [props.versionsDownloads]
   );
 
-  const [selectedDatum, setSelectedDatum] = useState<ChartDatum | undefined>();
+  const selectedData = useMemo(
+    () => selectedDatum && majorVersionGroups.get(selectedDatum.versionRange),
+    [selectedDatum, majorVersionGroups]
+  );
 
-  const selectedDatumBreakdown = useMemo(() => {
-    if (selectedDatum === undefined) {
-      return undefined;
-    } else {
-      return filterByMajorVersion(
-        selectedDatum.versionRange,
-        props.versionsDownloads
-      );
-    }
-  }, [selectedDatum, props.versionsDownloads]);
+  const chartData = useMemo(() => {
+    return Array.from(majorVersionGroups.entries())
+      .map(([versionRange, { version, items }]) => ({
+        versionRange,
+        version,
+        downloads: items.reduce((sum, { downloads }) => sum + downloads, 0),
+      }))
+      .sort(reverseCompare(compareField("version", compareLooseSemver)));
+  }, [majorVersionGroups]);
 
   return (
     <Fragment>
@@ -60,7 +64,7 @@ const ModuleStats: FC<{
       {props.moduleName && (
         <VersionTable
           // if there is no selected data, just show the top level major version data
-          data={selectedDatumBreakdown ?? chartData}
+          data={selectedData?.items ?? chartData}
           selectionName={selectedDatum?.versionRange ?? props.moduleName}
         />
       )}
@@ -80,42 +84,29 @@ function semverMajor(version: string): number {
 
 const majorVersionRange = (majorVersion: number): string => `${majorVersion}.X`;
 
-export function filterByMajorVersion(
-  selectedVersionRange: string,
-  versionsDownloads: Record<string, number>
-): ChartDatum[] {
-  return (
-    Object.entries(versionsDownloads)
-      .map(([version, downloads]) => ({
-        versionRange: majorVersionRange(semverMajor(version)),
-        version,
-        downloads,
-      }))
-      // selectedDatum is assumed to be an aggregate by major version
-      .filter((datum) => datum.versionRange === selectedVersionRange)
-  );
-}
+export type VersionGroup = {
+  version: string;
+  items: Array<{ version: string; downloads: number }>;
+};
 
 export function groupByMajorVersion(
-  versionsDownloads: Record<string, number>
-): ChartDatum[] {
-  // aggregate the individual download counts for each version into sums of each major version.
-  const majorVersionDownloads = new Map<number, number>();
-  for (const [version, downloads] of Object.entries(versionsDownloads)) {
-    const majorVersion = semverMajor(version);
+  versionDownloads: Readonly<Record<string, number>>
+): ReadonlyMap<string, VersionGroup> {
+  const items = [...Object.entries(versionDownloads)].map(
+    ([version, downloads]) => ({ version, downloads })
+  );
 
-    const currentDownloadCount = majorVersionDownloads.get(majorVersion) ?? 0;
-    majorVersionDownloads.set(majorVersion, currentDownloadCount + downloads);
+  const groups = new Map<string, VersionGroup>();
+  for (const item of items) {
+    const majorVersion = majorVersionRange(semverMajor(item.version));
+
+    let group = groups.get(majorVersion);
+    if (group === undefined) {
+      group = { version: `${semverMajor(item.version)}.0.0`, items: [] };
+      groups.set(majorVersion, group);
+    }
+    group.items.push(item);
   }
 
-  return (
-    Array.from(majorVersionDownloads.entries())
-      .map(([version, downloads]) => ({
-        versionRange: majorVersionRange(version),
-        version: `${version}.0.0`,
-        downloads,
-      }))
-      // the data needs to be sorted for the XYChart component to render it in the correct order
-      .sort(reverseCompare(compareField("version", compareLooseSemver)))
-  );
+  return groups;
 }
