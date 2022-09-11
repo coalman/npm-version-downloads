@@ -1,45 +1,5 @@
-import { filterByMajorVersion, groupByMajorVersion } from "./ModuleStats";
+import { groupByMajorVersion } from "./ModuleStats";
 import { computeYAxis } from "./VersionDownloadsBarChart";
-
-describe("filterByMajorVersion", () => {
-  it("should select data for 1.X", () => {
-    const actual = filterByMajorVersion("1.X", {
-      "1.0.1": 5,
-      "1.0.0": 5,
-      "2.0.0": 7,
-      "3.0.1": 7,
-      "1.0.0-rc.1": 5,
-      "1.5.0": 5,
-    });
-
-    expect(actual).toStrictEqual(
-      ["1.0.1", "1.0.0", "1.0.0-rc.1", "1.5.0"].map((version) => ({
-        versionRange: "1.X",
-        version,
-        downloads: 5,
-      }))
-    );
-  });
-
-  it("should be able to select no data", () => {
-    const actual = filterByMajorVersion("4.X", {
-      "1.0.1": 5,
-      "1.0.0": 5,
-      "2.0.0": 7,
-      "3.0.1": 7,
-      "1.0.0-rc.1": 5,
-      "1.5.0": 5,
-    });
-
-    expect(actual).toHaveLength(0);
-  });
-
-  it("should return no data for empty versionsDownloads", () => {
-    const actual = filterByMajorVersion("0.X", {});
-
-    expect(actual).toHaveLength(0);
-  });
-});
 
 describe("groupByMajorVersion", () => {
   it("should group into 3 major version buckets", () => {
@@ -55,43 +15,61 @@ describe("groupByMajorVersion", () => {
       "3.4.0": 7,
     });
 
-    expect(actual).toStrictEqual([
-      {
-        versionRange: "3.X",
-        version: "3.0.0",
-        downloads: 21,
-      },
-      {
-        versionRange: "2.X",
-        version: "2.0.0",
-        downloads: 15,
-      },
-      {
-        versionRange: "1.X",
-        version: "1.0.0",
-        downloads: 30,
-      },
-    ]);
-  });
-
-  it("should return data sorted by version (descending)", () => {
-    const actual = groupByMajorVersion({
-      "10.1.2": 5,
-      "2.0.1": 3,
-      "0.1.0": 2,
-      "1.5.1": 1,
-      "9.0.1": 10,
-      "7.0.0": 5,
-    });
-
-    expect(actual.map((a) => a.versionRange)).toStrictEqual([
-      "10.X",
-      "9.X",
-      "7.X",
-      "2.X",
-      "1.X",
-      "0.X",
-    ]);
+    expect(actual).toMatchInlineSnapshot(`
+      Map {
+        "1.X" => Object {
+          "items": Array [
+            Object {
+              "downloads": 10,
+              "version": "1.0.0",
+            },
+            Object {
+              "downloads": 10,
+              "version": "1.1.1",
+            },
+            Object {
+              "downloads": 10,
+              "version": "1.2.3",
+            },
+          ],
+          "version": "1.0.0",
+        },
+        "2.X" => Object {
+          "items": Array [
+            Object {
+              "downloads": 5,
+              "version": "2.0.1",
+            },
+            Object {
+              "downloads": 5,
+              "version": "2.0.3",
+            },
+            Object {
+              "downloads": 5,
+              "version": "2.111.2",
+            },
+          ],
+          "version": "2.0.0",
+        },
+        "3.X" => Object {
+          "items": Array [
+            Object {
+              "downloads": 7,
+              "version": "3.0.1-rc.1",
+            },
+            Object {
+              "downloads": 7,
+              "version": "3.2.3-beta.1",
+            },
+            Object {
+              "downloads": 7,
+              "version": "3.4.0",
+            },
+          ],
+          "version": "3.0.0",
+        },
+      }
+    `);
   });
 });
 
