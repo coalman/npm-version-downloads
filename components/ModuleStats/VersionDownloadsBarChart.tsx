@@ -89,6 +89,10 @@ function VersionDownloadsBarChart<T extends object>(
 export default VersionDownloadsBarChart;
 
 const { format: formatNumber } = new Intl.NumberFormat();
+const { format: formatCompactNumber } = new Intl.NumberFormat(undefined, {
+  notation: "compact",
+  compactDisplay: "short",
+});
 
 const ChartTooltip = (props: { version: string; downloads: number }) => (
   <Fragment>
@@ -118,15 +122,9 @@ export function computeYAxis(largestValue: number) {
 
   const domain: [number, number] = [ticks[0], ticks[ticks.length - 1]];
 
-  const tickFormat =
-    stepPower <= 2
-      ? // only use scientific notation if steps are larger than 100
-        String
-      : (value: number) => (value === 0 ? "0" : `${value / step}e${stepPower}`);
-
   return {
     ticks,
     domain,
-    tickFormat,
+    tickFormat: formatCompactNumber,
   };
 }

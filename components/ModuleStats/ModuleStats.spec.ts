@@ -97,15 +97,9 @@ describe("computeYAxis", () => {
     expect(actual.domain).toStrictEqual([0, 100]);
   });
 
-  it("should return non scientific notation format for 1000 downloads", () => {
-    const { domain, tickFormat } = computeYAxis(1000);
-
-    expect(domain.map(tickFormat)).toStrictEqual(["0", "1000"]);
-  });
-
-  it("should return scientific notation for 1800 downloads", () => {
+  it("should return compact notation", () => {
     const { ticks, tickFormat } = computeYAxis(1800);
 
-    expect(ticks.map(tickFormat)).toStrictEqual(["0", "1e3", "2e3"]);
+    expect(ticks.map(tickFormat)).toStrictEqual(["0", "1K", "2K"]);
   });
 });
