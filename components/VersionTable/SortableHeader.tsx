@@ -12,7 +12,7 @@ export const SortableHeader = (props: {
     <th aria-sort={props.sort} className="p-0">
       <button
         type="button"
-        className="w-48 min-w-full px-2 flex gap-2 items-center box-border border border-solid border-transparent hover:border-black"
+        className="w-48 min-w-full px-2 flex gap-2 items-center box-border border border-solid border-transparent hover:border-slate-400"
         onClick={props.onClick}
       >
         {props.children}

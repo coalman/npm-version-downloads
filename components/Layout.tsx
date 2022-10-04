@@ -25,7 +25,7 @@ const Header: FC<{
   hideLogo: boolean | undefined;
   hideModuleSearch: boolean | undefined;
 }> = (props) => (
-  <header className="px-12 py-4 flex justify-between text-white bg-black">
+  <header className="px-12 py-4 flex justify-between text-slate-50 bg-slate-800">
     <section>{!props.hideLogo && <Logo link />}</section>
     {!props.hideModuleSearch && <ModuleSearch />}
     <section>
@@ -41,4 +41,6 @@ const Header: FC<{
   </header>
 );
 
-const Footer: FC = () => <footer className="h-12 text-white bg-black"></footer>;
+const Footer: FC = () => (
+  <footer className="h-12 text-slate-50 bg-slate-800"></footer>
+);

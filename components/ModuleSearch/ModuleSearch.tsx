@@ -32,7 +32,7 @@ function ModuleSearch(props: { autoFocus?: boolean }) {
     <form role="search" className="flex gap-2">
       <input
         ref={setInput}
-        className="text-center text-black border-black border-solid border"
+        className="text-center bg-slate-900 text-slate-50 border-slate-400 border-solid border rounded-sm placeholder:italic placeholder:text-slate-400"
         type="text"
         autoCapitalize="off"
         autoComplete="off"
@@ -48,7 +48,7 @@ function ModuleSearch(props: { autoFocus?: boolean }) {
         }}
       />
       <button
-        className="border border-black border-solid bg-white text-black px-2"
+        className="border border-slate-400 border-solid bg-slate-900 text-slate-50 px-2"
         type="button"
         onClick={navigateToModule}
       >
