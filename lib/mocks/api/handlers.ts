@@ -1,3 +1,4 @@
+import { decodeModuleName } from "lib/moduleName";
 import { rest } from "msw";
 import { type ModuleStats } from "pages/api/module/[module]/stats";
 
@@ -9,7 +10,7 @@ export const handlers = [
     if (typeof moduleName !== "string") {
       return res(ctx.status(500), ctx.json({}));
     }
-    moduleName = moduleName.replace("$$", "/");
+    moduleName = decodeModuleName(moduleName);
 
     const data = moduleData[moduleName];
     if (!data) {

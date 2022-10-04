@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { memo, useRef, useCallback } from "react";
+import { encodeModuleName } from "lib/moduleName";
 
 function ModuleSearch(props: { autoFocus?: boolean }) {
   const refInput = useRef<HTMLInputElement | null>(null);
@@ -17,10 +18,7 @@ function ModuleSearch(props: { autoFocus?: boolean }) {
   const router = useRouter();
   const navigateToModule = () => {
     if (refInput.current) {
-      // replace first "/" with "$$" to handle scoped packages
-      // NOTE: triple "$$$" is needed because of special syntax support from String.prototype.replace:
-      //     | https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace#specifying_a_string_as_a_parameter
-      const moduleName = refInput.current.value.replace("/", "$$$");
+      const moduleName = encodeModuleName(refInput.current.value);
       router.push({
         pathname: "/module/[moduleName]",
         query: { moduleName },

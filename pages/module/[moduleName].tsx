@@ -5,14 +5,14 @@ import { Fragment } from "react";
 import { useModuleQuery } from "lib/useModuleQuery";
 import { ModuleStats } from "components/ModuleStats";
 import LoadingSpinner from "components/LoadingSpinner";
+import { decodeModuleName } from "lib/moduleName";
 
 const ModuleStatsPage: NextPage = () => {
   const moduleName = useRouter().query.moduleName as string | undefined;
 
   const moduleQuery = useModuleQuery(moduleName);
 
-  // "/" is replaced with "$$" for the rest api call
-  const moduleDisplayName = moduleName?.replace("$$", "/");
+  const moduleDisplayName = moduleName && decodeModuleName(moduleName);
 
   return (
     <Fragment>

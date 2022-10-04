@@ -4,6 +4,17 @@ import Head from "next/head";
 import { ModuleSearch } from "components/ModuleSearch";
 import Logo from "components/Logo";
 import Layout from "components/Layout";
+import Link from "next/link";
+import { encodeModuleName } from "lib/moduleName";
+
+const popularExamples: readonly string[] = [
+  "webpack",
+  "react",
+  "vue",
+  "rollup",
+  "vite",
+  "@trpc/server",
+];
 
 const Home: NextPage = () => (
   <Fragment>
@@ -22,6 +33,20 @@ const Home: NextPage = () => (
         </p>
       </header>
       <ModuleSearch autoFocus />
+      <div className="grid grid-cols-3 gap-2">
+        <span className="col-span-3 text-center border-b">
+          Example packages
+        </span>
+        {popularExamples.map((example) => (
+          <Link
+            href={`/module/${encodeModuleName(example)}`}
+            className="underline"
+            key={example}
+          >
+            <a className="text-center underline">{example}</a>
+          </Link>
+        ))}
+      </div>
     </main>
   </Fragment>
 );
