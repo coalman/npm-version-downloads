@@ -71,7 +71,7 @@ export const VersionTable: FC<VersionTableProps> = (props) => {
       </thead>
       <tbody>
         {sortedData.map(({ version, downloads }) => (
-          <tr key={version} className="odd:bg-slate-300">
+          <tr key={version} className="odd:bg-slate-800">
             <td className="px-2 py-1" data-testid="version-cell">
               {version}
             </td>

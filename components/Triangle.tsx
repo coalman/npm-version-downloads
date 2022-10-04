@@ -14,8 +14,10 @@ const Triangle = (props: TriangleProps) => (
     className={cx(
       "w-0 h-0 inline-block border-solid border-transparent",
       `border-${borderSize / 2}`,
-      props.dir === "up" && `border-t-0 border-b-${borderSize} border-b-black`,
-      props.dir === "down" && `border-b-0 border-t-${borderSize} border-t-black`
+      props.dir === "up" &&
+        `border-t-0 border-b-${borderSize} border-b-slate-50`,
+      props.dir === "down" &&
+        `border-b-0 border-t-${borderSize} border-t-slate-50`
     )}
     aria-hidden="true"
   />

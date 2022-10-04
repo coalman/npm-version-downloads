@@ -1,4 +1,4 @@
-import { Fragment, useMemo } from "react";
+import { useMemo } from "react";
 import { ParentSizeModern } from "@visx/responsive";
 import {
   XYChart,
@@ -10,13 +10,20 @@ import {
 
 // TODO: get these values from the same place tailwindcss does
 //     | (might need to add some css variables to do this).
-const chartTheme = buildChartTheme({
-  backgroundColor: "white",
-  colors: ["steelblue"],
-  tickLength: 5,
-  gridColor: "black",
-  gridColorDark: "black",
-});
+const chartTheme = (() => {
+  const textColor = "rgb(248 250 252)";
+  const bgColor = "rgb(15 23 42)";
+
+  return buildChartTheme({
+    backgroundColor: bgColor,
+    colors: ["#0369a1"],
+    tickLength: 4,
+    svgLabelSmall: { fill: textColor },
+    svgLabelBig: { fill: textColor },
+    gridColor: textColor,
+    gridColorDark: textColor,
+  });
+})();
 
 export interface VersionDownloadsBarChartProps<T> {
   data: T[];
@@ -69,10 +76,11 @@ function VersionDownloadsBarChart<T extends object>(
           <Tooltip
             snapTooltipToDatumX
             showSeriesGlyphs
+            style={{}} // avoid using built-in styles. Needed for tailwind class usage.
+            className="absolute bg-slate-800 text-slate-50 p-2 leading-4 rounded-sm"
             renderTooltip={({ tooltipData }) => {
               const datum = tooltipData?.nearestDatum?.datum as T | undefined;
-              if (!datum) return null;
-              return (
+              return !datum ? null : (
                 <ChartTooltip
                   version={props.xAccessor(datum)}
                   downloads={props.yAccessor(datum)}
@@ -95,10 +103,18 @@ const { format: formatCompactNumber } = new Intl.NumberFormat(undefined, {
 });
 
 const ChartTooltip = (props: { version: string; downloads: number }) => (
-  <Fragment>
-    <p>Version: {props.version}</p>
-    <p>Downloads: {formatNumber(props.downloads)}</p>
-  </Fragment>
+  <div className="flex flex-col gap-1 text-sm">
+    <div className="flex gap-2">
+      <span className="font-bold">Version:</span>
+      <span className="flex-grow text-right font-mono">{props.version}</span>
+    </div>
+    <div className="flex gap-2">
+      <span className="font-bold">Downloads:</span>
+      <span className="flex-grow text-right font-mono">
+        {formatNumber(props.downloads)}
+      </span>
+    </div>
+  </div>
 );
 
 export function computeYAxis(largestValue: number) {
