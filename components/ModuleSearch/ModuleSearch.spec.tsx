@@ -58,3 +58,16 @@ it("should navigate on Enter press", async () => {
 
   expect(router.push).toHaveBeenCalledWith(modulePath("react"));
 });
+
+it("should not try to navigate with empty string", async () => {
+  const { router, modulePath } = routerMock();
+  const user = userEvent.setup();
+
+  render(<ModuleSearch />);
+
+  const input = getInput();
+
+  await user.type(input, "{enter}");
+
+  expect(router.push).toHaveBeenCalledTimes(0);
+});
