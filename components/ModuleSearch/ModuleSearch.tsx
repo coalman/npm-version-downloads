@@ -17,7 +17,7 @@ function ModuleSearch(props: { autoFocus?: boolean }) {
 
   const router = useRouter();
   const navigateToModule = () => {
-    if (refInput.current) {
+    if (refInput.current && refInput.current.value !== "") {
       const moduleName = encodeModuleName(refInput.current.value);
       router.push({
         pathname: "/module/[moduleName]",
