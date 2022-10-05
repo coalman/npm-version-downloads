@@ -43,15 +43,9 @@ const ModuleStats: FC<{
   return (
     <Fragment>
       <h1 className="font-bold text-2xl">
-        <a
-          href="javascript:void(0);"
-          onClick={(event) => {
-            setSelectedDatum(undefined);
-            event.preventDefault();
-          }}
-        >
+        <button type="button" onClick={() => setSelectedDatum(undefined)}>
           {props.moduleName}
-        </a>
+        </button>
       </h1>
       <div style={{ width: 600, height: 400 }}>
         <VersionDownloadsBarChart
