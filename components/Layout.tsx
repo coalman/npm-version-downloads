@@ -25,7 +25,7 @@ const Header: FC<{
   hideLogo: boolean | undefined;
   hideModuleSearch: boolean | undefined;
 }> = (props) => (
-  <header className="px-12 py-4 flex justify-between text-slate-50 bg-slate-800">
+  <header className="px-6 sm:px-12 py-4 flex justify-between text-slate-50 bg-slate-800">
     <section>{!props.hideLogo && <Logo link />}</section>
     {!props.hideModuleSearch && <ModuleSearch />}
     <section>
