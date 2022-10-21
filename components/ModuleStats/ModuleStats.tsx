@@ -4,6 +4,7 @@ import { reverseCompare, compareField } from "lib/sort";
 import { compareLooseSemver } from "lib/semver";
 import { VersionTable } from "../VersionTable";
 import VersionDownloadsBarChart from "./VersionDownloadsBarChart";
+import clsx from "clsx";
 
 export interface ChartDatum {
   readonly versionRange: string;
@@ -47,7 +48,12 @@ const ModuleStats: FC<{
           {props.moduleName}
         </button>
       </h1>
-      <div style={{ width: 600, height: 400 }}>
+      <div
+        className={clsx(
+          "[width:400px] [height:300px]",
+          "md:[width:600px] md:[height:400px]"
+        )}
+      >
         <VersionDownloadsBarChart
           data={chartData}
           xAccessor={xAccessor}
