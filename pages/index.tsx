@@ -8,12 +8,12 @@ import Link from "next/link";
 import { encodeModuleName } from "lib/moduleName";
 
 const popularExamples: readonly string[] = [
-  "webpack",
   "react",
   "vue",
+  "preact",
+  "next",
+  "webpack",
   "rollup",
-  "vite",
-  "@trpc/server",
 ];
 
 const Home: NextPage = () => (
