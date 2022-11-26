@@ -20,26 +20,30 @@ const ModuleStats: FC<{
   versionsDownloads: Record<string, number>;
 }> = (props) => {
   const [selectedDatum, setSelectedDatum] = useState<ChartDatum | undefined>();
+  const [groupMode] = useState<"major" | "minor">(() => {
+    const majorVersions = allMajorVersions(props.versionsDownloads);
+    return majorVersions.size > 2 ? "major" : "minor";
+  });
 
-  const majorVersionGroups = useMemo(
-    () => groupByMajorVersion(props.versionsDownloads),
+  const versionGroups = useMemo(
+    () => createVersionGroups(groupMode, props.versionsDownloads),
     [props.versionsDownloads]
   );
 
   const selectedData = useMemo(
-    () => selectedDatum && majorVersionGroups.get(selectedDatum.versionRange),
-    [selectedDatum, majorVersionGroups]
+    () => selectedDatum && versionGroups.get(selectedDatum.versionRange),
+    [selectedDatum, versionGroups]
   );
 
   const chartData = useMemo(() => {
-    return Array.from(majorVersionGroups.entries())
+    return Array.from(versionGroups.entries())
       .map(([versionRange, { version, items }]) => ({
         versionRange,
         version,
         downloads: items.reduce((sum, { downloads }) => sum + downloads, 0),
       }))
       .sort(reverseCompare(compareField("version", compareLooseSemver)));
-  }, [majorVersionGroups]);
+  }, [versionGroups]);
 
   return (
     <Fragment>
@@ -74,22 +78,32 @@ const ModuleStats: FC<{
 
 export default ModuleStats;
 
-function semverMajor(version: string): number {
-  const majorVersion = semverParse(version, { loose: true })?.major;
-  if (majorVersion === undefined) {
+function parseSemver(version: string) {
+  const parsedVersion = semverParse(version, { loose: true });
+  if (parsedVersion === undefined || parsedVersion === null) {
     throw new Error(`Wasn't able to parse "${version}" semver string.`);
   }
-  return majorVersion;
+  return parsedVersion;
 }
 
-const majorVersionRange = (majorVersion: number): string => `${majorVersion}.X`;
+function allMajorVersions(
+  versionDownloads: Readonly<Record<string, number>>
+): ReadonlySet<number> {
+  const majorVersions = new Set<number>();
+  for (const version of Object.keys(versionDownloads)) {
+    const { major } = parseSemver(version);
+    majorVersions.add(major);
+  }
+  return majorVersions;
+}
 
 export type VersionGroup = {
   version: string;
   items: Array<{ version: string; downloads: number }>;
 };
 
-export function groupByMajorVersion(
+export function createVersionGroups(
+  groupMode: "major" | "minor",
   versionDownloads: Readonly<Record<string, number>>
 ): ReadonlyMap<string, VersionGroup> {
   const items = [...Object.entries(versionDownloads)].map(
@@ -98,12 +112,22 @@ export function groupByMajorVersion(
 
   const groups = new Map<string, VersionGroup>();
   for (const item of items) {
-    const majorVersion = majorVersionRange(semverMajor(item.version));
+    const { major, minor } = parseSemver(item.version);
+    const { version, versionGroup } =
+      groupMode === "major"
+        ? {
+            version: `${major}.0.0`,
+            versionGroup: `${major}.X`,
+          }
+        : {
+            version: `${major}.${minor}.0`,
+            versionGroup: `${major}.${minor}.X`,
+          };
 
-    let group = groups.get(majorVersion);
+    let group = groups.get(versionGroup);
     if (group === undefined) {
-      group = { version: `${semverMajor(item.version)}.0.0`, items: [] };
-      groups.set(majorVersion, group);
+      group = { version, items: [] };
+      groups.set(versionGroup, group);
     }
     group.items.push(item);
   }
