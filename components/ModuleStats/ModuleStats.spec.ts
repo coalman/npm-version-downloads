@@ -1,9 +1,9 @@
-import { groupByMajorVersion } from "./ModuleStats";
+import { createVersionGroups } from "./ModuleStats";
 import { computeYAxis } from "./VersionDownloadsBarChart";
 
 describe("groupByMajorVersion", () => {
   it("should group into 3 major version buckets", () => {
-    const actual = groupByMajorVersion({
+    const actual = createVersionGroups("major", {
       "1.0.0": 10,
       "1.1.1": 10,
       "1.2.3": 10,
