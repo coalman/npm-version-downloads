@@ -5,7 +5,6 @@ import { Fragment } from "react";
 import { useModuleQuery } from "lib/useModuleQuery";
 import { ModuleStats } from "components/ModuleStats";
 import LoadingSpinner from "components/LoadingSpinner";
-import { decodeModuleName } from "lib/moduleName";
 import clsx from "clsx";
 
 const ModuleStatsPage: NextPage = () => {
@@ -13,7 +12,8 @@ const ModuleStatsPage: NextPage = () => {
 
   const moduleQuery = useModuleQuery(moduleName);
 
-  const moduleDisplayName = moduleName && decodeModuleName(moduleName);
+  const moduleDisplayName =
+    moduleName !== undefined ? decodeURIComponent(moduleName) : "";
 
   return (
     <Fragment>

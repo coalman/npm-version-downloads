@@ -5,7 +5,6 @@ import { ModuleSearch } from "components/ModuleSearch";
 import Logo from "components/Logo";
 import Layout from "components/Layout";
 import Link from "next/link";
-import { encodeModuleName } from "lib/moduleName";
 
 const popularExamples: readonly string[] = [
   "react",
@@ -39,7 +38,7 @@ const Home: NextPage = () => (
         </span>
         {popularExamples.map((example) => (
           <Link
-            href={`/module/${encodeModuleName(example)}`}
+            href={`/module/${encodeURIComponent(example)}`}
             className="underline"
             key={example}
           >

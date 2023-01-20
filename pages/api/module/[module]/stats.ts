@@ -1,4 +1,3 @@
-import { decodeModuleName } from "lib/moduleName";
 import type { NextApiRequest, NextApiResponse } from "next";
 // @ts-ignore
 import validate from "validate-npm-package-name";
@@ -18,8 +17,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ): Promise<void> {
-  let moduleName = req.query.module as string;
-  moduleName = moduleName && decodeModuleName(moduleName);
+  const moduleName = decodeURIComponent(req.query.module as string);
 
   const result = await fetch(`https://www.npmjs.com/package/${moduleName}`);
   if (!result.ok) {
