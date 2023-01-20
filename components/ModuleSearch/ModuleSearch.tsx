@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import { memo, useRef, useCallback } from "react";
-import { encodeModuleName } from "lib/moduleName";
 
 function ModuleSearch(props: { autoFocus?: boolean }) {
   const refInput = useRef<HTMLInputElement | null>(null);
@@ -18,7 +17,7 @@ function ModuleSearch(props: { autoFocus?: boolean }) {
   const router = useRouter();
   const navigateToModule = () => {
     if (refInput.current && refInput.current.value !== "") {
-      const moduleName = encodeModuleName(refInput.current.value);
+      const moduleName = encodeURIComponent(refInput.current.value);
       router.push({
         pathname: "/module/[moduleName]",
         query: { moduleName },
