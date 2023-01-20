@@ -48,9 +48,9 @@ const ModuleStats: FC<{
   return (
     <Fragment>
       <h1 className="font-bold text-2xl">
-        <button type="button" onClick={() => setSelectedDatum(undefined)}>
+        <a href={`https://npmjs.com/package/${props.moduleName}`}>
           {props.moduleName}
-        </button>
+        </a>
       </h1>
       <div
         className={clsx(
@@ -65,13 +65,24 @@ const ModuleStats: FC<{
           onPointerUp={setSelectedDatum}
         />
       </div>
-      {props.moduleName && (
-        <VersionTable
-          // if there is no selected data, just show the top level major version data
-          data={selectedData?.items ?? chartData}
-          selectionName={selectedDatum?.versionRange ?? props.moduleName}
-        />
-      )}
+      <div className="relative">
+        {selectedDatum !== undefined && (
+          <button
+            className="absolute right-0 px-2 border border-slate-400"
+            type="button"
+            onClick={() => setSelectedDatum(undefined)}
+          >
+            Back
+          </button>
+        )}
+        {props.moduleName && (
+          <VersionTable
+            // if there is no selected data, just show the top level major version data
+            data={selectedData?.items ?? chartData}
+            selectionName={selectedDatum?.versionRange ?? props.moduleName}
+          />
+        )}
+      </div>
     </Fragment>
   );
 };
