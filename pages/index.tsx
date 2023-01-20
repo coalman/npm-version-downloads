@@ -13,7 +13,7 @@ const popularExamples: readonly string[] = [
   "preact",
   "next",
   "webpack",
-  "rollup",
+  "vite",
 ];
 
 const Home: NextPage = () => (
